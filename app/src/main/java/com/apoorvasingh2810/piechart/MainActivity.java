@@ -1,13 +1,20 @@
 package com.apoorvasingh2810.piechart;
 
+import android.Manifest;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 
@@ -42,11 +49,40 @@ public class MainActivity extends AppCompatActivity {
 //        pieChart.setCenterTextColor(Color.BLACK);
 //        pieChart.setEntryLabelTextSize(20);
 
-        addDataSet(pieChart);
+        addDataSet();
+
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Log.d(TAG, "onValueSelected: Value select from chart");
+                Log.d(TAG,"onValueSelected "+ e.toString());
+                Log.d(TAG,"onValueSelected "+ h.toString());
+
+                int pos1 = e.toString().indexOf("y: "); // total characters in ": " = 1(One)
+                String followers= e.toString().substring(pos1 + 3);
+
+                Log.d(TAG,"Followers: "+followers);
+
+                for (int i=0;i<yData.length;i++){
+                    if(yData[i]==Float.parseFloat(followers)){
+                        pos1=i;
+                        break;
+                    }
+                }
+                String celebrity =xData[pos1 + 1];
+                Toast.makeText(MainActivity.this,"Celebrity "+celebrity+"\n"+"Followers: "+followers+" Million",Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
     }
 
-    private void addDataSet(PieChart pieChart) {
+    private void addDataSet() {
 
         Log.d(TAG,"addDataSet: Started");
         ArrayList<PieEntry> yEntrys = new ArrayList<>();
@@ -63,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             xEntrys.add(xData[i]);
         }
 
-        // TODO create the data set
+        //Completed_TODO create the data set
         PieDataSet pieDataSet= new PieDataSet(yEntrys,"Popularity");
         pieDataSet.setSliceSpace(2);
         pieDataSet.setValueTextSize(12);
@@ -82,8 +118,16 @@ public class MainActivity extends AppCompatActivity {
         pieDataSet.setColors(colors);
 
 
-        //TODO - Add a legend to chart
+        //Completed_TODO - Add a legend to chart
 
+        Legend legend = pieChart.getLegend();
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+
+        //create pie data object
+        PieData pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
 
     }
 }
