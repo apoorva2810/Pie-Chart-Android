@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
         pieChart.setCenterText("Popularity Chart");
         pieChart.setCenterTextSize(10);
         pieChart.setDrawEntryLabels(true);
-//        pieChart.setUsePercentValues(true);
+
+        pieChart.setUsePercentValues(true);
+        pieChart.animateXY(1000,1000);
 //        pieChart.setHoleColor(Color.BLUE);
 //        pieChart.setCenterTextColor(Color.BLACK);
 //        pieChart.setEntryLabelTextSize(20);
